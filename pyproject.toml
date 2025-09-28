@@ -1,0 +1,46 @@
+# pyproject.toml
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# --- Core Metadata ---
+name = "libero2gym"
+version = "0.1.0"
+authors = [
+  { name="Zibin Dong", email="zibindong@outlook.com" },
+]
+description = "A Gym wrapper for LIBERO robotics task suites."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+# --- Core Dependencies ---
+# These packages are always installed with `pip install libero2gym`.
+dependencies = [
+    "numpy",
+    "gym",
+    "robosuite",
+    "termcolor",
+    # Install libero directly from its GitHub repository
+    "libero @ git+https://github.com/Lifelong-Robot-Learning/LIBERO.git",
+]
+
+# --- Optional Dependencies ---
+# These are installed only when a user specifies the "extra", e.g., `pip install libero2gym[pc]`.
+[project.optional-dependencies]
+pc = [
+    "torch",
+    "open3d",
+    "pytorch3d",
+]
+
+
+# --- Find Package ---
+[tool.setuptools.packages.find]
+# This is correct for your "flat layout"

@@ -6,7 +6,6 @@ from typing import List, Literal, Optional
 import gym
 import libero
 import numpy as np
-import torch
 from gym.spaces import Box, Dict
 from libero.libero import benchmark
 from libero.libero.envs import OffScreenRenderEnv
@@ -268,6 +267,7 @@ class LiberoEnv(gym.Env):
 
             if self.require_point_cloud:
                 import open3d as o3d
+                import torch
 
                 for camera_name in self.camera_names:
                     voxel_size = 0.003 if "eye_in_hand" in camera_name else 0.005
