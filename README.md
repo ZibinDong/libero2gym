@@ -43,7 +43,7 @@ env = gym.make("libero-goal-v0", task_id=0)
 
 # Reset the environment to the first of LIBERO's 50 predefined initial states.
 # If `init_state_id` is not specified, a random from the predefined states will be chosen.
-obs = env.reset(options={"init_state_id": 0})  
+obs = env.reset(init_state_id=0)  
 
 # Sample a random action
 act = env.action_space.sample()  
