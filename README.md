@@ -11,7 +11,11 @@ A simple Gym wrapper for the [LIBERO](https://github.com/Lifelong-Robot-Learning
 
 ## Installation
 
-First, clone the repository and install the package in editable mode:
+```bash
+pip install libero2gym
+```
+
+Or you can install from source. First, clone the repository and install the package in editable mode:
 
 ```bash
 git clone https://github.com/ZibinDong/libero2gym
@@ -22,7 +26,8 @@ pip install -e .
 If you require point cloud observations, you must install additional dependencies for preprocessing:
 
 ```bash
-pip install -e .[pc]
+pip install -e libero2gym[pc]
+pip install -e .[pc]. # If installing from source
 ```
 
 ## Usage
