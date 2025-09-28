@@ -82,7 +82,7 @@ class AsyncVectorEnv(VectorEnv):
         dummy_env_fn=None,
         observation_space=None,
         action_space=None,
-        shared_memory=True,
+        shared_memory=False,
         copy=True,
         context=None,
         daemon=True,
@@ -190,7 +190,7 @@ class AsyncVectorEnv(VectorEnv):
         _, successes = zip(*[pipe.recv() for pipe in self.parent_pipes])
         self._raise_if_errors(successes)
 
-    def reset_async(self, *args, **kwargs):
+    def reset_async(self, seed=None, return_info=None, options=None):
         self._assert_is_running()
         if self._state != AsyncState.DEFAULT:
             raise AlreadyPendingCallError(
@@ -199,11 +199,20 @@ class AsyncVectorEnv(VectorEnv):
                 self._state.value,
             )
 
-        for pipe in self.parent_pipes:
-            pipe.send(("reset", None))
+        if options is None:
+            options = [{} for _ in range(self.num_envs)]
+
+        if len(options) != self.num_envs:
+            raise ValueError(
+                f"kwargs_list must have the same length as the number of environments, "
+                f"but got {len(options)} and {self.num_envs}."
+            )
+
+        for i, pipe in enumerate(self.parent_pipes):
+            pipe.send(("reset", options[i]))
         self._state = AsyncState.WAITING_RESET
 
-    def reset_wait(self, *args, timeout=None, **kwargs):
+    def reset_wait(self, seed=None, return_info=None, options=None, timeout=None):
         """
         Parameters
         ----------
@@ -584,7 +593,7 @@ def _worker(index, env_fn, pipe, parent_pipe, shared_memory, error_queue):
         while True:
             command, data = pipe.recv()
             if command == "reset":
-                observation = env.reset()
+                observation = env.reset(**data)
                 pipe.send((observation, True))
             elif command == "step":
                 observation, reward, done, info = env.step(data)
@@ -638,7 +647,7 @@ def _worker_shared_memory(index, env_fn, pipe, parent_pipe, shared_memory, error
         while True:
             command, data = pipe.recv()
             if command == "reset":
-                observation = env.reset()
+                observation = env.reset(**data)
                 write_to_shared_memory(
                     index, observation, shared_memory, observation_space
                 )

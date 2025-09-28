@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     # single env example
     env = gym.make("libero-goal-v0", **env_kwargs)
-    obs = env.reset()
+    obs = env.reset(init_state_id=0)
 
     for k, v in obs.items():
         print(f"{k}: {v.shape}")
@@ -24,7 +24,7 @@ if __name__ == "__main__":
         shared_memory=False,
     )
 
-    obs = envs.reset()
+    obs = envs.reset(options=[{"init_state_id": i} for i in range(2)])
     for k, v in obs.items():
         print(f"{k}: {v.shape}")
 
